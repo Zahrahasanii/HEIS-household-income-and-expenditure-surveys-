@@ -1,0 +1,33 @@
+# Get a list of file names that match the pattern
+file_names = glob.glob(".../cleanedHEIS/weights/*.csv")
+# Read and append the data frames using a list comprehension
+dfs1 = [pd.read_csv(file_name) for file_name in file_names]
+
+
+RWeights1364=dfs2[1]
+UWeights1364=dfs2[14]
+
+RWeights1364["ADDRESS"]=RWeights1364["HOUSEHOLD"]
+UWeights1364["ADDRESS"]=UWeights1364["HOUSEHOLD"]
+
+RWeights1364=RWeights1364.loc[:,["weight","ADDRESS"]]
+UWeights1364=UWeights1364.loc[:,["weight","ADDRESS"]]
+
+
+HHWeights1376=dfs1[0]
+R64P4s1= pd.read_csv("..../cleanedHEIS/y64/R64P4s1.csv")
+U64P4s1= pd.read_csv("..../cleanedHEIS/y64/U64P4s1.csv")
+
+
+
+
+s1 = {'COL05': 'sum','COL07': 'sum','COL09': 'sum'}
+s3 = {'COL05': 'sum','COL07': 'sum','COL09': 'sum','COL11': 'sum'}
+R64P4s1 =R64P4s1.groupby(R64P4s1['ADDRESS']).aggregate(s1)
+U64P4s1 =U64P4s1.groupby(U64P4s1['ADDRESS']).aggregate(s3)
+R64P4s1 =pd.merge(R64P4s1,RWeights1364,on='ADDRESS')
+U64P4s1 =pd.merge(U64P4s1,UWeights1364,on='ADDRESS')
+
+
+R64P4s1 = R64P4s1[['COL05','COL07','COL09']].multiply(R64P4s1["weight"], axis="index")
+U64P4s1 =U64P4s1[['COL05','COL07','COL09','COL11']].multiply(U64P4s1["weight"], axis="index")
